@@ -1,0 +1,10 @@
+{
+  "name": "Smart Door",
+  "app_id": "",
+  "typescript": true,
+  "v2": true,
+  "proxies": [{
+    "path": "/api",
+    "proxyUrl": "http://besmarter.site"
+  }]
+}
