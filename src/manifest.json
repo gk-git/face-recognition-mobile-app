@@ -1,6 +1,6 @@
 {
-  "name": "Ionic Conference",
-  "short_name": "Ionic Conf",
+  "name": "Smart Door",
+  "short_name": "Smart Door",
   "start_url": "index.html",
   "display": "standalone",
   "icons": [{

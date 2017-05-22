@@ -1,8 +1,18 @@
 import {Injectable} from '@angular/core';
 
-import {Http} from '@angular/http';
+import {Http, RequestOptions, Headers} from '@angular/http';
+import {Storage} from '@ionic/storage';
+
 
 import {UserData} from './user-data';
+import {Api} from './api';
+
+
+import {
+    Events,
+    ToastController,
+    LoadingController
+} from 'ionic-angular';
 
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -12,79 +22,123 @@ import 'rxjs/add/observable/of';
 @Injectable()
 export class ConferenceData {
     data: any;
+    _logoutError: boolean;
+    loidings: any;
+    // loiding: LoadingController;
+    constructor(public http: Http,
+                public events: Events,
+                public toastCtrl: ToastController,
+                public user: UserData,
+                public loadingCtrl: LoadingController,
+                public storage: Storage,
+                public api: Api) {
 
-    constructor(public http: Http, public user: UserData) {
+        this.loidings = this.loadingCtrl.create({
+            content: 'Please wait...'
+        });
     }
+
+    presentLoadingDefault() {
+
+
+        this.loidings.present();
+
+
+    }
+
 
     load(): any {
         if (this.data) {
+            console.log('Getting data from object provider');
+
+            console.log(Observable.of(this.data));
             return Observable.of(this.data);
         } else {
-            return this.http.get('assets/data/data.json')
-                .map(this.processData, this);
+            console.log('Getting data from server ');
+            this.loidings.present();
+
+            let headers = new Headers({
+                'content-type': 'application/x-www-form-urlencoded'
+            });
+            let options = new RequestOptions({
+                headers: headers
+            });
+            // TODO: Encode the values using encodeURIComponent().
+            let body = 'api_token=' + this.user._apiToken + '&door_key=' + this.user._door_key;
+            let seq = this.api.post('schedule', body, options).map(this.processData, this);
+
+            console.log('seq');
+            console.log(seq);
+            return seq;
+            // return this.http.get('http://besmarter.site/api/v1/alldata',options)
+            // .map(this.processData, this);
         }
     }
 
     processData(data: any) {
         // just some good 'ol JS fun with objects and arrays
         // build up the data by linking speakers to sessions
+
         this.data = data.json();
 
-        this.data.tracks = [];
 
-        // loop through each day in the schedule
-        this.data.schedule.forEach((day: any) => {
+        if (this.data.success) {
+            this._logoutError = false;
+            this.data = this.data.data;
+            return this.data;
+        }
+        else {
+            this._logoutError = true;
 
-            // loop through each timeline group in the day
-            day.groups.forEach((group: any) => {
-                // loop through each session in the timeline group
-                group.sessions.forEach((session: any) => {
-                    session.speakers = [];
 
-                    if (session.speakerNames) {
-                        session.speakerNames.forEach((speakerName: any) => {
-                            let speaker = this.data.speakers.find((s: any) => s.name === speakerName);
-                            if (speaker) {
-                                session.speakers.push(speaker);
-                                speaker.sessions = speaker.sessions || [];
-                                speaker.sessions.push(session);
-                            }
-                        });
-                    }
+            // this.user.logout();
+            // this.storage.clear();
+            // this.nav.setRoot(LoginPage);
 
-                    if (session.tracks) {
-                        session.tracks.forEach((track: any) => {
-                            if (this.data.tracks.indexOf(track) < 0) {
-                                this.data.tracks.push(track);
-                            }
-                        });
-                    }
-                });
-            });
-        });
+            if (this.data.error.code == 200) {
+
+            }
+            this.data = this.data.data;
+
+        }
+
 
         return this.data;
     }
 
-    getTimeline(dayIndex: number, queryText = '', excludeTracks: any[] = [], segment = 'all') {
+    getTimeline(segment = 'all') {
         return this.load().map((data: any) => {
-            this.data.schedule.forEach((day: any) => {
-               day = day.date[0];
-            });
-            console.log(data);
-            let day = data.schedule[dayIndex];
+            this.loidings.dismiss();
+            if (data) {
+
+                console.log('timeline');
+                console.log(this.data);
+            } else {
+
+            }
+            let day = data.schedule;
             day.shownSessions = 0;
 
-            queryText = queryText.toLowerCase().replace(/,|\.|-/g, ' ');
-            let queryWords = queryText.split(' ').filter(w => !!w.trim().length);
 
+
+            let counter = 0;
             day.groups.forEach((group: any) => {
+
+                const oneDay = 24*60*60*1000;
+                const time_1 =Math.abs((new Date().getTime() -new Date(group.dates.date).getTime())/(oneDay));
+
+
+                console.log("time 1");
+                console.log(time_1);
                 group.hide = true;
+                if ( segment != "all" && time_1 > 1) {
+                    return day;
+                }
+                counter++;
 
                 group.sessions.forEach((session: any) => {
-
                     // check if this session should show or not
-                    this.filterSession(session, queryWords, excludeTracks, segment);
+
 
                     if (!session.hide) {
                         // if this session is not hidden then this group should show
@@ -95,69 +149,42 @@ export class ConferenceData {
 
             });
 
+
             return day;
         });
     }
 
-    filterSession(session: any, queryWords: string[], excludeTracks: any[], segment: string) {
 
-        let matchesQueryText = false;
-        if (queryWords.length) {
-            // of any query word is in the session name than it passes the query test
-            queryWords.forEach((queryWord: string) => {
-                if (session.name.toLowerCase().indexOf(queryWord) > -1) {
-                    matchesQueryText = true;
-                }
-            });
-        } else {
-            // if there are no query words then this session passes the query test
-            matchesQueryText = true;
-        }
-
-        // if any of the sessions tracks are not in the
-        // exclude tracks then this session passes the track test
-        let matchesTracks = false;
-        session.tracks.forEach((trackName: string) => {
-            if (excludeTracks.indexOf(trackName) === -1) {
-                matchesTracks = true;
-            }
-        });
-
-        // if the segement is 'favorites', but session is not a user favorite
-        // then this session does not pass the segment test
-        let matchesSegment = false;
-        if (segment === 'favorites') {
-            if (this.user.hasFavorite(session.name)) {
-                matchesSegment = true;
-            }
-        } else {
-            matchesSegment = true;
-        }
-
-        // all tests must be true if it should not be hidden
-        session.hide = !(matchesQueryText && matchesTracks && matchesSegment);
-    }
-
-    getSpeakers() {
+    getUsers() {
         return this.load().map((data: any) => {
-            return data.speakers.sort((a: any, b: any) => {
-                let aName = a.name.split(' ').pop();
-                let bName = b.name.split(' ').pop();
-                return aName.localeCompare(bName);
-            });
+            this.loidings.dismiss();
+            if (data) {
+
+            } else {
+
+            }
+
+            return data.users;
         });
     }
 
-    getTracks() {
-        return this.load().map((data: any) => {
-            return data.tracks.sort();
-        });
-    }
 
     getMap() {
+
         return this.load().map((data: any) => {
+            this.loidings.dismiss();
+            if (data) {
+            } else {
+
+            }
+
             return data.map;
         });
+    }
+
+    clear() {
+        this.data = null;
+        this._logoutError = false;
     }
 
 }

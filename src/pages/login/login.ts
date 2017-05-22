@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {NgForm} from '@angular/forms';
-import {SpeakerListPage} from '../speaker-list/speaker-list';
+import {SchedulePage} from '../schedule/schedule';
 
 import {Events} from 'ionic-angular';
 import {Storage} from '@ionic/storage';
@@ -13,8 +13,8 @@ import {
     Loading
 } from 'ionic-angular';
 
-import {TabsPage} from '../tabs/tabs';
 import {UserData} from '../../providers/user-data';
+import {ConferenceData} from '../../providers/conference-data';
 
 
 @Component({
@@ -46,7 +46,7 @@ export class LoginPage {
     constructor(public events: Events,
                 public storage: Storage, public navCtrl: NavController,
                 public user: UserData,
-                public userData: UserData,
+                public conf: ConferenceData,
                 public toastCtrl: ToastController,
                 private menu: MenuController,
                 private loadingCtrl: LoadingController) {
@@ -55,9 +55,10 @@ export class LoginPage {
         this.storage.get('hasLoggedIn')
             .then((hasLogin) => {
                 if (hasLogin) {
-                    this.navCtrl.setRoot(SpeakerListPage);
+                    this.events.publish('user:login');
+                    this.navCtrl.setRoot(SchedulePage);
                 } else {
-
+                    this.events.publish('user:logout');
                 }
 
             });
@@ -67,11 +68,12 @@ export class LoginPage {
         this.showLoading();
         this.submitted = true;
 
-        this.user.login(this.login).subscribe((resp) => {
+        this.user.login(this.login).then((resp) => {
+            this.conf.data = this.user._data;
             this.loading.dismiss();
             this.menu.swipeEnable(true);
 
-            this.navCtrl.setRoot(SpeakerListPage);
+            this.navCtrl.setRoot(SchedulePage);
         }, (err) => {
             setTimeout(() => {
                 this.loading.dismiss();
@@ -86,12 +88,7 @@ export class LoginPage {
             });
             toast.present();
         });
-
-
-        if (form.valid && this.test) {
-            this.userData.login(this.login.email);
-            this.navCtrl.push(TabsPage);
-        }
+        
     }
 
     setUsername(username: string): void {

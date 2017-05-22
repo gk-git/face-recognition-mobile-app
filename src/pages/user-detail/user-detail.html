@@ -1,0 +1,39 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>User Details</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding class="speaker-detail">
+
+    <div text-center>
+
+
+    </div>
+
+    <h1><strong>Name: </strong>{{user.name}}</h1>
+    <h2><strong>Role: </strong>{{user.role}}</h2>
+
+
+    <ion-grid fixed>
+        <ion-row align-items-stretch>
+            <ion-col col-6 align-self-stretch align-self-center>
+                Time
+            </ion-col>
+            <ion-col col-6 align-self-stretch align-self-center>
+                Action
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-grid fixed *ngIf="pasts_available">
+        <ion-row align-items-stretch *ngFor="let past of pasts" >
+            <ion-col col-6 align-self-stretch align-self-center>
+                Time
+            </ion-col>
+            <ion-col col-6 align-self-stretch align-self-center>
+                Action
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+</ion-content>

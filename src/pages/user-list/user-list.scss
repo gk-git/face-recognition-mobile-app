@@ -1,4 +1,4 @@
-page-speaker-list {
+page-user-list {
   .scroll-content {
     background: #EDEDED;
   }
@@ -14,11 +14,12 @@ page-speaker-list {
   }
 
   .speaker-card ion-card-header .item {
-    padding: 4px 16px;
+    padding: 4px 4px;
   }
 
   .speaker-card ion-card-content {
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 16px;
+    padding-right: 16px;
   }
+
 }

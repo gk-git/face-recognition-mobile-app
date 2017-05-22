@@ -3,7 +3,7 @@ import {MenuController, NavController, Slides} from 'ionic-angular';
 import {Storage} from '@ionic/storage';
 import {Events} from 'ionic-angular';
 import {LoginPage} from '../login/login';
-import {SpeakerListPage} from '../speaker-list/speaker-list';
+
 
 @Component({
     selector: 'page-tutorial',
@@ -24,27 +24,27 @@ export class TutorialPage {
 
     startApp() {
 
-        this.login =  this.storage.get('hasLoggedIn');
-        this.storage.get('hasSeenTutorial')
-            .then((hasSeeTutorial) => {
-                console.log(hasSeeTutorial);
-                if (hasSeeTutorial) {
-                    console.log(this.storage.get('hasLoggedIn'));
-                    if(this.login) {
+        this.login =  this.storage.get('hasLoggedIn').then(()=>{
+            this.storage.get('hasSeenTutorial')
+                .then((hasSeeTutorial) => {
+                    console.log(hasSeeTutorial);
+                    if (hasSeeTutorial) {
+                        console.log(this.storage.get('hasLoggedIn'));
+                        if(this.login) {
 
-                        this.navCtrl.setRoot(SpeakerListPage).then(()=>{
-                            this.events.publish('user:login');
-                        });
-                    }else {
-                        this.navCtrl.setRoot(LoginPage);
+                            this.navCtrl.setRoot(LoginPage);
+                        }else {
+                            this.navCtrl.setRoot(LoginPage);
+                        }
+                    } else {
+                        this.navCtrl.push(LoginPage).then(() => {
+                            this.storage.set('hasSeenTutorial', 'true');
+                        })
                     }
-                } else {
-                    this.navCtrl.push(LoginPage).then(() => {
-                        this.storage.set('hasSeenTutorial', 'true');
-                    })
-                }
 
-            });
+                });
+
+        });
 
 
     }

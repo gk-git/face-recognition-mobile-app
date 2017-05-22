@@ -1,10 +1,11 @@
 {
   "name": "Smart Door",
-  "app_id": "",
-  "typescript": true,
-  "v2": true,
-  "proxies": [{
-    "path": "/api",
-    "proxyUrl": "http://besmarter.site"
-  }]
+  "app_id": "49d72be8",
+  "proxies": [
+    {
+      "path": "/api",
+      "proxyUrl": "http://besmarter.site"
+    }
+  ],
+  "type": "ionic-angular"
 }

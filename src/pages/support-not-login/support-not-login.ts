@@ -1,17 +1,22 @@
 import {Component} from '@angular/core';
-import {NgForm} from '@angular/forms';
 import {Storage} from '@ionic/storage';
+
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import {AlertController, NavController, ToastController} from 'ionic-angular';
 
+/*
+ Generated class for the SupportPage page.
+
+ See http://ionicframework.com/docs/v2/components/#navigation for more info on
+ Ionic pages and navigation.
+ */
 
 @Component({
-    selector: 'page-user',
-    templateUrl: 'support.html'
+    selector: 'page-support-not-login',
+    templateUrl: 'support-not-login.html'
 })
-export class SupportPage {
-
+export class SupportNotLoginPagePage {
     submitted: boolean = false;
     supportMessage: string;
     supportEmail: string;
@@ -21,66 +26,18 @@ export class SupportPage {
     slideOneForm: FormGroup;
     submitAttempt: boolean = false;
 
+
     constructor(public navCtrl: NavController,
                 public alertCtrl: AlertController,
                 public storage: Storage,
                 public formBuilder: FormBuilder,
                 public toastCtrl: ToastController) {
-
         this.slideOneForm = formBuilder.group({
-            message: ['', Validators.compose([Validators.minLength(10), Validators.required])],
+            email: ['', Validators.compose([Validators.maxLength(244), Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$'), Validators.required])],
+            message: ['', Validators.compose([Validators.minLength(10),Validators.required])],
         });
     }
 
-    ionViewDidLoad() {
-        this.storage.get('hasLoggedIn')
-            .then((hasLoggedIn) => {
-
-                if (hasLoggedIn) {
-                    this.login = true;
-                    this.notLogin = false;
-
-                } else {
-                    this.notLogin = true;
-                    this.login = false;
-                }
-                console.log("Support");
-                console.log(this.login);
-            });
-
-
-    }
-
-
-    submit(form: NgForm) {
-        this.submitted = true;
-
-        if (form.valid) {
-            this.supportMessage = 'Hi ';
-            this.submitted = false;
-
-            let toast = this.toastCtrl.create({
-                message: 'Your support request has been sent.',
-                duration: 3000
-            });
-            toast.present();
-        }
-    }
-
-    submitNotLogin(form: NgForm) {
-        this.submitted = true;
-
-        if (form.valid) {
-            this.supportMessage = 'Hi ';
-            this.submitted = false;
-
-            let toast = this.toastCtrl.create({
-                message: 'Your support request has been sent.',
-                duration: 3000
-            });
-            toast.present();
-        }
-    }
     save(){
 
         this.submitAttempt = true;
@@ -105,11 +62,12 @@ export class SupportPage {
 
     }
 
+
     // If the user enters text in the support question and then navigates
     // without submitting first, ask if they meant to leave the page
     ionViewCanLeave(): boolean | Promise<boolean> {
         // If the support message is empty we should just navigate
-        if (!this.supportMessage || this.supportMessage.trim().length === 0) {
+        if ((!this.supportMessage || this.supportMessage.trim().length === 0)&&(!this.supportEmail || this.supportEmail.trim().length === 0)) {
             return true;
         }
 

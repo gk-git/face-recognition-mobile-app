@@ -1,39 +1,97 @@
 {
-  "name": "ionic-conference-app",
-  "description": "Ionic Conference App",
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/driftyco/ionic-conference-app.git"
-  },
-  "scripts": {
-    "build": "ionic-app-scripts build",
-    "clean": "ionic-app-scripts clean",
-    "ionic:build": "ionic-app-scripts build",
-    "ionic:serve": "ionic-app-scripts serve"
-  },
-  "dependencies": {
-    "@angular/common": "2.4.8",
-    "@angular/compiler": "2.4.8",
-    "@angular/compiler-cli": "2.4.8",
-    "@angular/core": "2.4.8",
-    "@angular/forms": "2.4.8",
-    "@angular/http": "2.4.8",
-    "@angular/platform-browser": "2.4.8",
-    "@angular/platform-browser-dynamic": "2.4.8",
-    "@angular/platform-server": "2.4.8",
-    "@ionic-native/core": "3.1.1",
-    "@ionic-native/in-app-browser": "3.1.1",
-    "@ionic-native/splash-screen": "3.1.1",
-    "@ionic/storage": "2.0.0",
-    "ionic-angular": "2.3.0",
-    "ionicons": "3.0.0",
-    "rxjs": "5.0.1",
-    "sw-toolbox": "3.4.0",
-    "zone.js": "0.7.2"
-  },
-  "devDependencies": {
-    "@ionic/app-scripts": "1.1.4",
-    "typescript": "2.0.9"
-  }
+    "name": "ionic-hello-world",
+    "author": "Ionic Framework",
+    "homepage": "http://ionicframework.com/",
+    "private": true,
+    "scripts": {
+        "clean": "ionic-app-scripts clean",
+        "build": "ionic-app-scripts build",
+        "ionic:build": "ionic-app-scripts build",
+        "ionic:serve": "ionic-app-scripts serve"
+    },
+    "dependencies": {
+        "@angular/common": "4.1.0",
+        "@angular/compiler": "4.1.0",
+        "@angular/compiler-cli": "4.1.0",
+        "@angular/core": "4.1.0",
+        "@angular/forms": "4.1.0",
+        "@angular/http": "4.1.0",
+        "@angular/platform-browser": "4.1.0",
+        "@angular/platform-browser-dynamic": "4.1.0",
+        "@angular/platform-server": "2.4.8",
+        "@ionic-native/core": "3.9.1",
+        "@ionic-native/in-app-browser": "^3.8.0",
+        "@ionic-native/splash-screen": "^3.9.1",
+        "@ionic-native/status-bar": "3.9.1",
+        "@ionic/cloud-angular": "^0.11.0",
+        "@ionic/storage": "2.0.1",
+        "cordova-android": "6.1.0",
+        "cordova-ios": "^4.4.0",
+        "cordova-plugin-console": "~1.0.5",
+        "cordova-plugin-crosswalk-webview": "~2.2.0",
+        "cordova-plugin-device": "~1.1.4",
+        "cordova-plugin-inappbrowser": "~1.4.0",
+        "cordova-plugin-splashscreen": "~4.0.1",
+        "cordova-plugin-statusbar": "~2.2.1",
+        "cordova-plugin-whitelist": "~1.3.1",
+        "cordova-plugin-wkwebview-engine": "https://github.com/driftyco/cordova-plugin-wkwebview-engine.git",
+        "ionic-angular": "3.2.1",
+        "ionic-native": "^2.9.0",
+        "ionic-plugin-keyboard": "~2.2.1",
+        "ionicons": "3.0.0",
+        "ng2-translate": "^5.0.0",
+        "phonegap-plugin-push": "1.10.1",
+        "rxjs": "5.1.1",
+        "sw-toolbox": "3.4.0",
+        "zone.js": "^0.8.10"
+    },
+    "devDependencies": {
+        "@ionic/app-scripts": "1.3.7",
+        "typescript": "~2.2.1",
+        "@ionic/cli-plugin-cordova": "1.1.2",
+        "@ionic/cli-plugin-ionic-angular": "1.1.2"
+    },
+    "cordovaPlugins": [
+        "cordova-plugin-console",
+        "cordova-plugin-whitelist",
+        "cordova-plugin-device",
+        "cordova-plugin-statusbar",
+        "cordova-plugin-splashscreen",
+        "ionic-plugin-keyboard"
+    ],
+    "cordovaPlatforms": [
+        "ios",
+        {
+            "platform": "ios",
+            "version": "",
+            "locator": "ios"
+        }
+    ],
+    "description": "SmartDoors: An Ionic project",
+    "cordova": {
+        "platforms": [
+            "android",
+            "ios"
+        ],
+        "plugins": {
+            "cordova-plugin-console": {},
+            "cordova-plugin-crosswalk-webview": {
+                "XWALK_VERSION": "22+",
+                "XWALK_LITEVERSION": "xwalk_core_library_canary:17+",
+                "XWALK_COMMANDLINE": "--disable-pull-to-refresh-effect",
+                "XWALK_MODE": "embedded",
+                "XWALK_MULTIPLEAPK": "true"
+            },
+            "cordova-plugin-device": {},
+            "cordova-plugin-inappbrowser": {},
+            "cordova-plugin-splashscreen": {},
+            "cordova-plugin-statusbar": {},
+            "cordova-plugin-whitelist": {},
+            "cordova-plugin-wkwebview-engine": {},
+            "ionic-plugin-keyboard": {},
+            "phonegap-plugin-push": {
+                "SENDER_ID": "3510990185"
+            }
+        }
+    }
 }

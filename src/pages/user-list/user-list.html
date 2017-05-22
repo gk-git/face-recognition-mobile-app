@@ -1,0 +1,38 @@
+<ion-header>
+    <ion-navbar>
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Users List</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content class="outer-content speaker-list">
+    <ion-list>
+        <ion-grid fixed>
+            <ion-row align-items-stretch>
+                <ion-col col-12 col-lg-3 col-md-4 align-self-stretch align-self-center *ngFor="let user of users">
+                    <ion-card class="speaker-card">
+
+                        <ion-card-content>
+                            <button ion-item detail-none (click)="goToUserDetail(user)">
+                                Name: {{user.name}}<br>
+                                Role: {{user.role}}<br>
+                                Email: {{user.email}}<br>
+
+                            </button>
+                            <h4 *ngIf="user.pastCondition">Last action ons: {{user.past}}</h4>
+                            <h5 *ngIf="user.pastCondition">Action: {{user.action}}</h5>
+                            <h4 *ngIf="!user.pastCondition">No previous History</h4>
+                        </ion-card-content>
+
+
+                    </ion-card>
+
+
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-list>
+
+</ion-content>
